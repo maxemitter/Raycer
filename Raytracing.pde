@@ -38,7 +38,7 @@ void mousePressed() {
             Position currentPos = new Position(mouseX, mouseY);
             
             if(!currentLine.startPos.equals(currentPos)) {
-                currentLine.endPos = currentPos;
+                currentLine.setEndPos(currentPos);
                 lines.add(currentLine);
             }
             currentLine = null;
