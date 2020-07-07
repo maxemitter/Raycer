@@ -25,7 +25,9 @@ void draw() {
         }
     }
     else {
-        ellipse(mouseX, mouseY, 10, 10);
+        for(float radians = 0; radians < 2 * PI; radians += 0.1) {
+            line(mouseX + cos(radians) * 5, mouseY + sin(radians) * 5, mouseX + cos(radians) * 1000, mouseY + sin(radians) * 1000);
+        }
     }
 }
 
