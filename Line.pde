@@ -2,6 +2,12 @@ class Line {
     Position startPos, endPos;
     Equation equation;
     
+    Line(Position startPos, Position endPos) {
+        this.startPos = startPos;
+        this.endPos = endPos;
+        equation = new Equation(startPos, endPos);
+    }
+    
     Line(Position startPos) {
         this.startPos = startPos;
     }

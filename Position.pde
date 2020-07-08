@@ -1,12 +1,12 @@
 class Position {
-    int x, y;
+    float x, y;
     
-    Position(int x, int y) {
+    Position(float x, float y) {
         this.x = x;
         this.y = y;
     }
     
-    boolean equals(int x, int y) {
+    boolean equals(float x, float y) {
         return this.x == x && this.y == y;
     }
     

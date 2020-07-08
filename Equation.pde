@@ -2,11 +2,13 @@ class Equation {
     float slope, intercept;
     float startInterval, endInterval;
     boolean isVertical = false;
+    float horizontalPosition;
     
     Equation(Position startPos, Position endPos) {
         if(startPos.x == endPos.x) {
             isVertical = true;
             
+            horizontalPosition = startPos.x;
             startInterval = min(startPos.y, endPos.y);
             endInterval = max(startPos.y, endPos.y);
         }
@@ -31,5 +33,13 @@ class Equation {
             startInterval = smallerPos.x;
             endInterval = biggerPos.x;
         }
+    }
+    
+    float calculateYAt(float x) {
+        return slope * x + intercept;
+    }
+    
+    boolean isInInterval(float value) {
+        return value >= startInterval && value <= endInterval;
     }
 }
