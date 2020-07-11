@@ -71,21 +71,14 @@ void keyPressed() {
 void cast(Line castedLine) {
     float intersection;
     for(Line line : lines) {
-        intersection = calculteIntersection(castedLine, line);
+        intersection = calculateIntersection(castedLine, line);
         if(intersection != -1) {
-            if(abs(intersection - line.equation.startInterval) < abs(line.equation.endInterval - line.equation.startInterval)) {
-                castedLine.setEndPos(new Position(intersection, castedLine.equation.calculateYAt(intersection)));
-            }
+            castedLine.setEndPos(new Position(intersection, castedLine.equation.calculateYAt(intersection)));
         }
     }
 }
 
-float calculteIntersection(Line one, Line two) {
-    //If one of the lines ends before the other starts
-    if(one.equation.startInterval > two.equation.endInterval || one.equation.endInterval < two.equation.startInterval) {
-        return -1;
-    }
-    
+float calculateIntersection(Line one, Line two) {
     //If one of the lines is vertical
     if(one.equation.isVertical) {
         float y = two.equation.calculateYAt(one.equation.horizontalPosition);
@@ -99,6 +92,11 @@ float calculteIntersection(Line one, Line two) {
         if(two.equation.isInInterval(y) && one.equation.isInInterval(two.equation.horizontalPosition)) {
             return two.equation.horizontalPosition;
         }
+        return -1;
+    }
+    
+    //If one of the lines ends before the other starts
+    if(one.equation.startInterval > two.equation.endInterval || one.equation.endInterval < two.equation.startInterval) {
         return -1;
     }
     
