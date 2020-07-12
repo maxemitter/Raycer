@@ -1,6 +1,8 @@
 Line currentLine;
+Circle currentCircle;
 ArrayList<Line> lines;
-boolean drawMode;
+ArrayList<Circle> circles;
+Mode mode;
 
 void settings() {
     size(800, 800);
@@ -9,61 +11,95 @@ void settings() {
 void setup() {
     frameRate(60);
     lines = new ArrayList<Line>();
-    drawMode = true;
+    circles = new ArrayList<Circle>();
+    mode = Mode.LineDraw;
+    ellipseMode(RADIUS);
 }
 
 void draw() {
     background(255);
     
+    fill(0);
+    text("Mode: " + mode, 10, 10);
+    noFill();
+    
     for(Line line : lines) {
         line.draw();
     }
     
-    if(drawMode) {
-        if(currentLine != null) {
-            currentLine.draw();
-        }
+    for(Circle circle : circles) {
+        circle.draw();
     }
-    else {
-        for(float radians = 0; radians < 2 * PI; radians += 0.1) {
-            Line current = new Line(new Position(mouseX + cos(radians) * 5, mouseY + sin(radians) * 5), 
-                                    new Position(mouseX + cos(radians) * 2000, mouseY + sin(radians) * 2000));
-            cast(current);
-            line(current.startPos.x, current.startPos.y, current.endPos.x, current.endPos.y);
-        }
+    
+    switch(mode) {
+        case LineDraw:
+            if(currentLine != null) {
+                currentLine.draw();
+            }
+        break;
+        case CircleDraw:
+            if(currentCircle != null) {
+                currentCircle.draw();
+            }
+        break;
+        case Cast:
+            for(float radians = 0; radians < 2 * PI; radians += 0.1) {
+                Line current = new Line(new Position(mouseX + cos(radians) * 5, mouseY + sin(radians) * 5), 
+                                        new Position(mouseX + cos(radians) * 2000, mouseY + sin(radians) * 2000));
+                cast(current);
+                line(current.startPos.x, current.startPos.y, current.endPos.x, current.endPos.y);
+            }
+        break;
     }
 }
 
 void mousePressed() {
-    if(drawMode) {
-        if(currentLine == null) {
-            currentLine = new Line(new Position(mouseX, mouseY));
-        }
-        else {
-            Position currentPos = new Position(mouseX, mouseY);
-            
-            if(!currentLine.startPos.equals(currentPos)) {
-                currentLine.setEndPos(currentPos);
-                lines.add(currentLine);
+    switch(mode) {
+        case LineDraw:
+            if(currentLine == null) {
+                currentLine = new Line(new Position(mouseX, mouseY));
             }
-            currentLine = null;
-        }
+            else {
+                Position currentPos = new Position(mouseX, mouseY);
+                
+                if(!currentLine.startPos.equals(currentPos)) {
+                    currentLine.setEndPos(currentPos);
+                    lines.add(currentLine);
+                }
+                currentLine = null;
+            }
+        break;
+        case CircleDraw:
+            if(currentCircle == null) {
+                currentCircle = new Circle(new Position(mouseX, mouseY));
+            }
+            else {
+                float radius = currentCircle.getDistanceToMouse();
+                
+                if(radius != 0) {
+                    currentCircle.radius = radius;
+                    circles.add(currentCircle);
+                }
+                
+                currentCircle = null;
+            }
+        break;
     }
 }
 
 void keyPressed() {
     switch(key) {
         case ESC:
-            if(currentLine != null) {
+            if(currentLine != null || currentCircle != null) {
                 currentLine = null;
+                currentCircle = null;
                 key = 0;
             }
         break;
         case ' ':
-            drawMode = !drawMode;
-            if(currentLine != null) {
-                currentLine = null;
-            }
+            mode = mode.next();
+            currentLine = null;
+            currentCircle = null;
         break;
     }
 }
