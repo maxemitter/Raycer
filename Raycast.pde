@@ -107,14 +107,21 @@ void keyPressed() {
 void cast(Line castedLine) {
     float intersection;
     for(Line line : lines) {
-        intersection = calculateIntersection(castedLine, line);
+        intersection = calculateLineIntersection(castedLine, line);
+        if(intersection != -1) {
+            castedLine.setEndPos(new Position(intersection, castedLine.equation.calculateYAt(intersection)));
+        }
+    }
+    
+    for(Circle circle : circles) {
+        intersection = calculateCircleIntersection(castedLine, circle);
         if(intersection != -1) {
             castedLine.setEndPos(new Position(intersection, castedLine.equation.calculateYAt(intersection)));
         }
     }
 }
 
-float calculateIntersection(Line one, Line two) {
+float calculateLineIntersection(Line one, Line two) {
     //If one of the lines is vertical
     if(one.equation.isVertical) {
         float y = two.equation.calculateYAt(one.equation.horizontalPosition);
@@ -142,4 +149,72 @@ float calculateIntersection(Line one, Line two) {
         return x;
     }
     return -1;
+}
+
+float calculateCircleIntersection(Line line, Circle circle) {
+    //If the line is vertical we check whether the line is in the circle
+    if(line.equation.isVertical) {
+        float distance = abs(line.equation.horizontalPosition - circle.pos.x);
+        if(distance > circle.radius) {
+            return -1;
+        }
+        else if(distance < circle.radius) {
+            float yDiff = sqrt(circle.radius * circle.radius - line.equation.horizontalPosition * line.equation.horizontalPosition);
+            float upperY = circle.pos.y + yDiff;
+            float lowerY = circle.pos.y - yDiff;
+            
+            return getCloserToStart(line, upperY, lowerY);
+        }
+        else {
+            return line.equation.horizontalPosition;
+        }
+    }
+    
+    //Coefficients for the quadratic equation
+    float a = 1 
+              + line.equation.slope * line.equation.slope;
+    float b = - 2 * circle.pos.x 
+              + 2 * line.equation.intercept * line.equation.slope 
+              - 2 * line.equation.slope * circle.pos.y;
+    float c = + circle.pos.x * circle.pos.x 
+              + line.equation.intercept * line.equation.intercept 
+              - 2 * line.equation.intercept * circle.pos.y
+              + circle.pos.y * circle.pos.y
+              - circle.radius * circle.radius;
+    
+    //The discriminant to check for the amount of intersections (>0 for 2, 0 for 1 and <0 for none) 
+    float discriminant = b * b - 4 * a * c;
+    
+    if(discriminant > 0) {
+        float xOne = (-b + sqrt(discriminant)) / (2 * a);
+        float xTwo = (-b - sqrt(discriminant)) / (2 * a);
+        
+        return getCloserToStart(line, xOne, xTwo);
+    }
+    else if(discriminant < 0) {
+        return -1;
+    }
+    else {
+        return -b / (2 * a);
+    }
+}
+
+float getCloserToStart(Line line, float one, float two) {
+    if(line.equation.isInInterval(one) && line.equation.isInInterval(two)) {
+        if(abs(one - line.startPos.x) < abs(two - line.startPos.x)) {
+            return one;
+        }
+        else {
+            return two;
+        }
+    }
+    else if(line.equation.isInInterval(one)) {
+        return one;
+    }
+    else if(line.equation.isInInterval(two)) {
+        return two;
+    }
+    else {
+        return -1;
+    }
 }
