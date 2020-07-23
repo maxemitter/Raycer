@@ -14,10 +14,16 @@ To open the project:
 3. Compile and run the sketch by pressing the arrow button in the top left corner.
 
 To use the program:
-1. Start drawing a new line by left-clicking somewhere in the sketch window.
-2. Complete the line by left-clicking again where you want the line to end. Pressing the escape-key cancels the currently drawing line and so does switching to cast mode.
-3. Press the space-key to switch to cast mode (and back again).
-4. In cast mode, you can now move the mouse around to see how the rays collide with the lines previously drawn.
+
+In the top left corner of the screen the current mode of the program is being displayed. By pressing the spacebar it is possible to cycle trough the different modes, which there are three of:  
+1. LineDraw  
+In this mode you can start drawing a new line by left-clicking somewhere in the sketch window. The start point is set to the current mouse position and the end point of the line will follow the mouse until the left mouse button is pressed again, which again sets the end point of the line to the current mouse position. 
+2. CircleDraw  
+In this mode you can start drawing a circle by left-clicking somewhere in the sketch window. The center of the circle is set to the current mouse position and the radius is determined by the distance of the mouse to the center point which effectively makes the circle boundary follow the mouse. Once the left mouse button is pressed again the current radius will be locked in.
+3. Cast  
+In this mode the rays are casted and it is possible to see how the rays collide with the previously drawn lines and circles. The rays originate from near the mouse in a circle and facing outwards.
+
+When in either the LineDraw or CircleDraw mode a line or circle has been started drawing both the escape key and the space key cancel the drawing of the current object.
 
 ## Maths
 
