@@ -123,7 +123,7 @@ void cast(Line castedLine) {
 
 float calculateLineIntersection(Line one, Line two) {
     //If one of the lines is vertical
-    if(one.equation.isVertical) {
+    if(one.equation.isVertical) { //<>//
         float y = two.equation.calculateYAt(one.equation.horizontalPosition);
         if(one.equation.isInInterval(y) && two.equation.isInInterval(one.equation.horizontalPosition)) {
             return one.equation.horizontalPosition;
@@ -140,6 +140,19 @@ float calculateLineIntersection(Line one, Line two) {
     
     //If one of the lines ends before the other starts
     if(one.equation.startInterval > two.equation.endInterval || one.equation.endInterval < two.equation.startInterval) {
+        return -1;
+    }
+    
+    //If the lines are parallel
+    //This is the only time where it is important that one is the casted line and two is the static line
+    //It is important because we need to know which direction the line is coming from to calculate the *first* intersection
+    if(isApproxEqual(one.equation.slope, two.equation.slope)) {
+        if(isApproxEqual(one.equation.intercept, two.equation.intercept)) {
+            if(two.equation.startInterval < one.endPos.x) {
+                return max(two.equation.startInterval, one.startPos.x);
+            }
+            return min(two.equation.endInterval, one.startPos.x);
+        }
         return -1;
     }
     
@@ -171,7 +184,7 @@ float calculateCircleIntersection(Line line, Circle circle) {
     }
     
     //Coefficients for the quadratic equation
-    float a = 1 
+    float a = + 1 
               + line.equation.slope * line.equation.slope;
     float b = - 2 * circle.pos.x 
               + 2 * line.equation.intercept * line.equation.slope 
@@ -217,4 +230,8 @@ float getCloserToStart(Line line, float one, float two) {
     else {
         return -1;
     }
+}
+
+boolean isApproxEqual(float one, float two) {
+    return round(one * 1000) == round(two * 1000);
 }
