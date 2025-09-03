@@ -1,6 +1,6 @@
-# Raycast
+# Raycer
 
-Raycast is a very simple raycasting implementation using the [Processing](https://processing.org/) framework for Java.
+Raycer is a very simple ray casting implementation using the [Processing](https://processing.org/) framework for Java.
 
 ## Installation
 
@@ -179,7 +179,7 @@ There are also cases where after we check for interval inclusion we still have t
 
 ## Project Status
 
-This project is pretty much done and unless somebody requests a feature, there are really only two things that I might add to this README at some point in the future.
+This project is essentially done and there are really only two things that I might add to this README at some point in the future:
 
 * How I generate the rays starting from the mouse coordinates.
 * Why the intersection of two overlapping lines (equal slope and intercept) is tricky to calculate.
